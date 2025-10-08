@@ -3,7 +3,7 @@ Shader "Custom/Shader_8_Anisotropic"
     Properties
     {
         [MainColor] _BaseColor("Base Color", Color) = (0.86, 0.39, 0.39, 1)
-         _SpecularColor("Specular Color", Color) = (1, 1, 1, 1)
+         _SpecularIntensity("Specular Intensity", Range(0, 1)) = 0.3
         _AmbientRate("Ambient Rate", Range(0, 1)) = 0.2
         _RoughnessX("Roughness X", Range(0, 1)) = 0.8
         _RoughnessY("Roughness Y", Range(0, 1)) = 0.2
@@ -41,7 +41,7 @@ Shader "Custom/Shader_8_Anisotropic"
 
             CBUFFER_START(UnityPerMaterial)
                 half4 _BaseColor;
-                half4 _SpecularColor;
+                half _SpecularIntensity;
                 half _AmbientRate;
                 half _RoughnessX;
                 half _RoughnessY;
@@ -60,13 +60,13 @@ Shader "Custom/Shader_8_Anisotropic"
 
             half4 frag(Varyings IN) : SV_Target
             {
-                half3 normal = normalize(IN.normal);// ääÇÁÇ©Ç…Ç∑ÇÈÇΩÇﬂÇ…ê≥ãKâªÇµíºÇ∑
+                half3 normal = normalize(IN.normal);// Êªë„Çâ„Åã„Å´„Åô„Çã„Åü„ÇÅ„Å´Ê≠£Ë¶èÂåñ„ÅóÁõ¥„Åô
                 half3 binormal = normalize(cross(normal, IN.tangent.xyz) * IN.tangent.w);
                 half3 tangent = cross(binormal, normal) * IN.tangent.w;
 
                 Light light = GetMainLight();
                 half3 view_direction = normalize(TransformViewToWorld(float3(0,0,0)) - IN.position);
-//                half3 view_direction = TransformViewToWorldNormal(float3(0,0,1));// í∏ì_ÇÃà íuÇå©Ç»Ç¢ãﬂéó
+//                half3 view_direction = TransformViewToWorldNormal(float3(0,0,1));// È†ÇÁÇπ„ÅÆ‰ΩçÁΩÆ„ÇíË¶ã„Å™„ÅÑËøë‰ºº
                 half3 half_vector = normalize(light.direction + view_direction);
                 half VdotN = max(0.000001, dot(view_direction, normal));
                 half LdotN = max(0.000001, dot(light.direction, normal));
@@ -80,7 +80,7 @@ Shader "Custom/Shader_8_Anisotropic"
                 half3 ambient = _BaseColor.rgb;
                 half3 lambert = _BaseColor.rgb * LdotN;
                 half c = (XdotH*XdotH/(alphaX*alphaX) + YdotH*YdotH/(alphaY*alphaY))/(HdotN * HdotN);
-                half3 specular = _SpecularColor * exp(-c) / sqrt(LdotN * VdotN) / (4 * PI * alphaX * alphaY);
+                half3 specular = _SpecularIntensity * exp(-c) / sqrt(LdotN * VdotN) / (4 * PI * alphaX * alphaY);
 
                 half3 color = light.color * 
                     lerp(lerp(lambert, ambient, _AmbientRate), specular, _Metallic);
@@ -90,3 +90,4 @@ Shader "Custom/Shader_8_Anisotropic"
         }
     }
 }
+
