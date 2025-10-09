@@ -85,6 +85,7 @@ Material:
     - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
     - _AlphaToMask: 0
+    - _AmbienRate: 0.2
     - _AmbientRate: 0.2
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
@@ -108,8 +109,8 @@ Material:
     - _QueueOffset: 0
     - _ReceiveShadows: 1
     - _Roughness: 0.4
-    - _RoughnessX: 0.8
-    - _RoughnessY: 0.2
+    - _RoughnessX: 0.2
+    - _RoughnessY: 0.8
     - _Smoothness: 0.5
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
